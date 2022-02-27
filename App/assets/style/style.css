@@ -1,0 +1,20 @@
+#backendHeader {
+  background-color: rgb(0, 207, 0);
+  color: white;
+  font-weight: bolder;
+  font-style: italic;
+}
+
+input, textarea {
+  display: block;
+}
+
+#postsTabel td {
+  border: 2px solid blue;
+}
+
+a#logout {
+  color: red;
+  font-size: 1.5em;
+  font-style: normal;
+}
