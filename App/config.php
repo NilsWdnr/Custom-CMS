@@ -4,6 +4,7 @@ namespace App;
 
 class config{
     private static $options = [
+        "page_title" => "Endprüfung Übung",
         "root" => "http://localhost:8888",
         "database" => [
             "host" => "localhost:8889",

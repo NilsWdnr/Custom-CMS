@@ -15,6 +15,7 @@ class LoginController extends BaseController {
   public function index(){
 
   $this->view->isBackend(true);
+  $this->view->setTitle("Login");
 
     if(isset($_POST["submit"])){
       $user = new User($this->db);

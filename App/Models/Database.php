@@ -81,7 +81,7 @@ class Database {
         return $this->results()[0] ?? null;
     }
 
-    public function update(string $targetField, string $value, string $identifierField, string $identifier){
+    public function update(string $targetField, $value, string $identifierField, $identifier){
         $values = [$value, $identifier];
         $sql = "UPDATE {$this->table} SET $targetField = ? WHERE $identifierField = ?";
         $this->query($sql,$values);

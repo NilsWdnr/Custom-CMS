@@ -47,13 +47,35 @@ class Post {
   public function get(int $id){
     $this->db->table("posts");
     $getQuery =  $this->db->where("id","=",$id);
-    return $getQuery->first();
+    $post = $getQuery->first();
+
+    if(!is_null($post["post_image"])){
+      $this->db->table("images");
+      $getQuery =  $this->db->where("id","=",$post["post_image"]);
+      $post["post_image"] = $getQuery->first();
+    }
+
+    return $post;
   
   }
 
   public function getAll(){
     $this->db->table("posts");
-    return $this->db->getAll("created","DESC");
+    $foundPosts = $this->db->getAll("created","DESC");
+
+    $postsReturn = [];
+
+    foreach($foundPosts as $post){
+      if(!is_null($post["post_image"])){
+        $this->db->table("images");
+        $getQuery =  $this->db->where("id","=",$post["post_image"]);
+        $post["post_image"] = $getQuery->first()["image_directory"];
+      }
+
+      array_push($postsReturn, $post);
+    }
+
+    return $postsReturn;
   
   }
 
@@ -65,7 +87,37 @@ class Post {
     }
   }
 
-  public function edit(int $id,array $data){
+  public function edit(int $id,array $postData){
+
+    $data = [];
+
+    if(isset($postData["post_image"])){
+
+      $tmp_name = $_FILES["post_image"]["tmp_name"];
+      $image_name = $_FILES["post_image"]["name"];
+    
+
+      $targetDir = "app/include/uploaded_images/".$image_name;
+
+      move_uploaded_file($tmp_name,$targetDir);
+
+      $imageData = [
+        "title" => $postData["title"],
+        "image_directory" => $targetDir
+      ];
+
+      $this->db->table("images");
+      $this->db->store($imageData);
+      $imgID = $this->db->getLastPrimary();
+    }
+
+    $data = [
+      "post_image" => $imgID ?? null,
+      "title" => $postData["title"],
+      "content" => $postData["content"]
+    ];
+
+
     $this->db->table("posts");
 
     foreach($data as $column => $value){

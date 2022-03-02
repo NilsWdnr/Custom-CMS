@@ -7,10 +7,12 @@ use App\config;
 class View {
 
     private $isBackend;
+    private $title;
 
     public function __construct(){
 
         $this->isBackend = false;
+        $this->title = null;
         
     }
 
@@ -18,9 +20,22 @@ class View {
         $this->isBackend = $value;
     }
 
+    public function setTitle(string $title){
+
+        $this->title = $title;
+
+    }
+
     public function renderView($page, $params = []){
 
         $root = config::get("root");
+        $main_title = config::get("page_title");
+
+        if(!is_null($this->title)){
+            $title = $this->title . " - " . $main_title;
+        } else {
+            $title = $main_title;
+        }
 
         extract($params);
 

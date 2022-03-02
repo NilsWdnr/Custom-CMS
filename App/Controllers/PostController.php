@@ -18,6 +18,7 @@ class PostController extends BaseController {
   public function create(){
 
     $this->view->isBackend(true);
+    $this->view->setTitle("Post erstellen");
 
     if(isset($_POST["submit"])){
 
@@ -62,6 +63,7 @@ class PostController extends BaseController {
   public function edit(string $id){
 
     $this->view->isBackend(true);
+    $this->view->setTitle("Post bearbeiten");
 
     $id = (int)$id;
 
@@ -92,6 +94,22 @@ class PostController extends BaseController {
           
           $data["post_image"] = $_FILES["post_image"]; 
 
+        } else if(isset($_POST["remove_post_image"])&&$_POST["remove_post_image"]==="on"){
+          
+          $data["post_image"] = null;
+
+          $foundPost = $post->get($id);
+          
+          $this->db->table("images");
+      
+          $getQuery = $this->db->where("id","=",$foundPost["post_image"]["id"]);
+          $foundImage = $getQuery->first();
+          var_dump($foundImage);
+          $directory = $foundImage["image_directory"];
+      
+          unlink($directory);
+    
+          $this->db->delete_where("id","=",$foundPost["post_image"]["id"]);
         }
 
         $post->edit($id,$data);
@@ -125,6 +143,7 @@ class PostController extends BaseController {
       header("location: /dashboard");
     } else {
       $this->view->isBackend(true);
+      $this->view->setTitle("Post löschen");
       $this->view->renderView("deletePost");
     }
     

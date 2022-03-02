@@ -16,6 +16,7 @@ class DashboardController extends BaseController {
     $foundPosts = $post->getAll();
 
     $this->view->isBackend(true);
+    $this->view->setTitle("Dashboard");
     $this->view->renderView("dashboard",["posts"=>$foundPosts]);
   }
 }
